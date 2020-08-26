@@ -14,7 +14,7 @@ quad = PShape(vertices=vertices, fill_color=Color(255),
 contour_shape = PShape(vertices=[(0, 0), (100, 0), (100, 100), (0, 100)], 
         fill_color=Color(255), stroke_color=Color(0), stroke_weight=2,
         stroke_join=1, stroke_cap=1,
-        contour=[[25, 25], [75, 25], [75, 75], [25, 75]])
+        contours=[[25, 25], [75, 25], [75, 75], [25, 75]])
 
 class TestPShape(unittest.TestCase):
     def test_properties(self):
