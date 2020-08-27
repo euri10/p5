@@ -20,12 +20,6 @@ import builtins
 
 
 
-
-
-__all__ = [ 'background', 'clear', 'fill', 'no_fill',
-            'stroke', 'no_stroke', 'tint', 'no_tint' , 
-            'stroke_weight', 'stroke_cap', 'stroke_join']
-
 from p5.core import p5
 from p5.core.color import Color
 from p5.core.image import PImage, image_mode, image

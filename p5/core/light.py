@@ -1,6 +1,5 @@
 import numpy as np
 
-__all__ = ['lights', 'ambient_light', 'directional_light', 'point_light', 'light_falloff', 'light_specular']
 
 from p5.core import p5
 from p5.sketch.util import ensure_p3d, scale_tuple
