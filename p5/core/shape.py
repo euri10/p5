@@ -25,6 +25,7 @@ import numpy as np
 
 
 
+__all__ = ['PShape']
 
 from p5.core import p5
 from p5.core.color import Color
