@@ -1,4 +1,9 @@
-from p5 import *
+from math import cos, radians, sin
+
+from p5.core.attribs import background
+from p5.core.constants import TRIANGLE_STRIP
+from p5.core.vertex import begin_shape, vertex, end_shape
+from p5.sketch.userspace import size, run
 
 x = 0
 y = 0

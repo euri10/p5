@@ -1,8 +1,11 @@
-from . import p5, fill
-from ..sketch.util import ensure_p3d, scale_tuple
 import numpy as np
 
 __all__ = ['normal_material', 'basic_material', 'blinn_phong_material', 'ambient', 'emissive', 'diffuse', 'shininess', 'specular']
+
+from p5.core import p5
+from p5.core.attribs import fill
+from p5.sketch.util import ensure_p3d, scale_tuple
+
 
 class BasicMaterial:
     def __init__(self, color):

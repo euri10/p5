@@ -20,7 +20,6 @@ from numpy.linalg import inv
 from sys import stderr
 import numpy as np
 import math
-from ..pmath import matrix
 
 import builtins
 
@@ -29,14 +28,14 @@ from vispy.gloo import Texture2D, Program
 
 from contextlib import contextmanager
 
-from ..core.constants import Z_EPSILON
-from ..core.geometry import Geometry
-from ..core.shape import PShape
-
-from ..pmath.matrix import translation_matrix
-from .openglrenderer import OpenGLRenderer, get_render_primitives, to_3x3
-from .shaders3d import src_default, src_fbuffer, src_normal, src_phong
-from ..core.material import BasicMaterial, NormalMaterial, BlinnPhongMaterial
+from p5.core.constants import Z_EPSILON
+from p5.core.geometry import Geometry
+from p5.core.material import BasicMaterial, NormalMaterial, BlinnPhongMaterial
+from p5.core.shape import PShape
+from p5.pmath import matrix
+from p5.pmath.matrix import translation_matrix
+from p5.sketch.openglrenderer import OpenGLRenderer, to_3x3, get_render_primitives
+from p5.sketch.shaders3d import src_fbuffer, src_normal, src_default, src_phong
 
 
 class GlslList:

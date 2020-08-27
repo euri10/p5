@@ -19,12 +19,12 @@
 import colorsys
 import math
 
-from ..pmath import lerp
-from ..pmath import constrain
 
-from .constants import colour_codes
 
 __all__ = ['color_mode', 'Color']
+
+from p5.core.constants import colour_codes
+from p5.pmath.utils import constrain, lerp
 
 color_parse_mode = 'RGB'
 color_range = (255, 255, 255, 255)

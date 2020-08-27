@@ -20,9 +20,11 @@
 3D geometry class for p5py
 """
 
-from . import p5
 import numpy as np
 import math
+
+from p5.core import p5
+
 
 class Geometry:
 	"""

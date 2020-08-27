@@ -18,10 +18,8 @@
 
 import math
 
-from .geometry import Geometry
 
-from ..pmath import matrix
-from .primitives import _draw_on_return
+
 
 # We use these in ellipse tessellation. The algorithm is similar to
 # the one used in Processing and the we compute the number of
@@ -41,6 +39,10 @@ from .primitives import _draw_on_return
 #
 # - M :: Maximum point accuracy (== MAX_POINT_ACCURACY)
 #
+from p5.core.geometry import Geometry
+from p5.core.primitives import _draw_on_return
+from p5.pmath import matrix
+
 MIN_POINT_ACCURACY = 20
 MAX_POINT_ACCURACY = 200
 POINT_ACCURACY_FACTOR = 10

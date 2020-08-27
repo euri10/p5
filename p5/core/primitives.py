@@ -21,19 +21,18 @@ import math
 
 import numpy as np
 
-from ..pmath import Point
-from ..pmath import curves
-from ..pmath.utils import SINCOS
-
-from .shape import PShape
-from .geometry import Geometry
-from .constants import SType
-
-from . import p5
 
 __all__ = ['Arc', 'point', 'line', 'arc', 'triangle', 'quad',
            'rect', 'square', 'circle', 'ellipse', 'ellipse_mode',
            'rect_mode', 'bezier', 'curve', 'create_shape', 'draw_shape']
+
+from p5.core import p5
+from p5.core.constants import SType
+from p5.core.geometry import Geometry
+from p5.core.shape import PShape
+from p5.pmath import curves
+from p5.pmath.utils import SINCOS
+from p5.pmath.vector import Point
 
 _rect_mode = 'CORNER'
 _ellipse_mode = 'CENTER'

@@ -1,4 +1,9 @@
-from p5 import *
+from p5.core.attribs import no_fill, fill
+from p5.core.constants import TRIANGLES, TRIANGLE_FAN, QUAD_STRIP, QUADS, LINES, CLOSE, \
+        TRIANGLE_STRIP
+from p5.core.vertex import begin_shape, vertex, end_shape
+from p5.sketch.userspace import size, run
+
 
 def setup():
         size(720, 400)

@@ -18,18 +18,19 @@
 
 import builtins
 
-from .color import Color
-from .image import image
-from .image import image_mode
-from .image import PImage
-from .structure import push_style
-from .transforms import push_matrix
 
-from . import p5
+
+
 
 __all__ = [ 'background', 'clear', 'fill', 'no_fill',
             'stroke', 'no_stroke', 'tint', 'no_tint' , 
             'stroke_weight', 'stroke_cap', 'stroke_join']
+
+from p5.core import p5
+from p5.core.color import Color
+from p5.core.image import PImage, image_mode, image
+from p5.core.structure import push_style
+from p5.core.transforms import push_matrix
 
 stroke_cap_codes = {
     'PROJECT': 0,

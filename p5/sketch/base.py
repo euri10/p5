@@ -23,11 +23,8 @@ import builtins
 from PIL import Image
 from vispy import app
 
-from ..core import p5
-
-from .events import KeyEvent
-from .events import MouseEvent
-from .events import handler_names
+from p5.core import p5
+from p5.sketch.events import handler_names, MouseEvent, KeyEvent
 
 
 def _dummy(*args, **kwargs):

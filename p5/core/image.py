@@ -26,15 +26,13 @@ from PIL import ImageFilter
 from PIL import ImageChops
 from PIL import ImageOps
 from vispy import gloo
-from . import p5
 
-from . import color
-from ..pmath import constrain
-from ..pmath.utils import _is_numeric
-from .structure import push_style
 
 __all__ = ['PImage', 'image', 'load_image', 'image_mode',
            'load_pixels']
+
+from p5.core import color, p5
+from p5.pmath.utils import _is_numeric, constrain
 
 _image_mode = 'corner'
 

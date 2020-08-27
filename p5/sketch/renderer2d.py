@@ -18,8 +18,10 @@
 
 import numpy as np
 import math
+
+from .openglrenderer import OpenGLRenderer, get_render_primitives
 from ..pmath import matrix
-from .shaders2d import src_default, src_fbuffer
+from .shaders2d import src_default, src_fbuffer, src_texture, src_line
 
 import builtins
 
@@ -29,9 +31,7 @@ from vispy.gloo import Texture2D
 from vispy.gloo import VertexBuffer
 
 from contextlib import contextmanager
-from .shaders2d import src_texture
-from .shaders2d import src_line
-from .openglrenderer import OpenGLRenderer, get_render_primitives
+
 
 class Renderer2D(OpenGLRenderer):
 	def __init__(self):

@@ -21,11 +21,10 @@ import math
 import re
 import numpy as np
 
-from . import Color
-from . import PShape
-from . import primitives
-from . import transforms
-from ..pmath import matrix
+from p5.core import primitives, transforms
+from p5.core.color import Color
+from p5.core.shape import PShape
+from p5.pmath import matrix
 
 default_values = { # default values of SVG attributes
 	"stroke-width": 1,

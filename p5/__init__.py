@@ -16,10 +16,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-from .sketch import *
-from .core import *
-from .pmath import *
-
 from .__version__ import __title__
 from .__version__ import __description__
 from .__version__ import __url__

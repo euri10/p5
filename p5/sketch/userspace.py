@@ -27,18 +27,17 @@ from functools import wraps
 
 from vispy import app
 
-from .base import Sketch
-from .events import handler_names
 
-from ..core import p5
-from ..pmath import matrix
-
-from ..core.constants import *
-from .renderer2d import Renderer2D
-from .renderer3d import Renderer3D
 
 __all__ = ['no_loop', 'loop', 'redraw', 'size', 'title', 'no_cursor',
            'cursor', 'exit', 'draw', 'setup', 'run', 'save_frame', 'save']
+
+from p5.core import p5
+from p5.pmath import matrix
+from p5.sketch.base import Sketch
+from p5.sketch.events import handler_names
+from p5.sketch.renderer2d import Renderer2D
+from p5.sketch.renderer3d import Renderer3D
 
 builtins.width = 360
 builtins.height = 360

@@ -23,16 +23,15 @@ from PIL import ImageFont
 from PIL import ImageFilter
 from PIL import ImageChops
 
-from .image import image
-from .image import PImage
-from .structure import push_style
-
-from . import p5
 
 __all__ = ['create_font', 'load_font', 'text', 'text_font',
     'text_align', 'text_leading', 'text_size', 'text_width',
     'text_ascent', 'text_descent'
     ]
+
+from p5.core import p5
+from p5.core.image import PImage, image
+from p5.core.structure import push_style
 
 _font_family = ImageFont.load_default()
 _text_align_x = "LEFT"

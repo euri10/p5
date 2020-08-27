@@ -1,12 +1,14 @@
 from abc import ABC
 import numpy as np
 
-from ..core import p5
-from ..core.constants import SType
-from ..core.primitives import Arc
+
 
 from vispy.gloo import Program, VertexBuffer, FrameBuffer, IndexBuffer
 from OpenGL.GLU import gluTessBeginPolygon, gluTessBeginContour, gluTessEndPolygon, gluTessEndContour, gluTessVertex
+
+from p5.core import p5
+from p5.core.constants import SType
+from p5.core.primitives import Arc
 
 
 def to_3x3(mat):

@@ -1,4 +1,6 @@
-from p5 import *
+from p5.core.primitives import square, rect, triangle, line, quad, ellipse, circle
+from p5.sketch.userspace import size, run
+
 
 def setup():
     size(720, 400)

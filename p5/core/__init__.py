@@ -15,17 +15,4 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-from .structure import *
-from .shape import *
-from .primitives import *
-from .primitives3d import *
-from .transforms import *
-from .color import *
-from .attribs import *
-from .image import *
-from .font import *
-from .constants import *
-from .vertex import *
-from .svg import *
-from .material import *
-from .light import *
+

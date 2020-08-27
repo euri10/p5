@@ -17,10 +17,8 @@
 #
 from contextlib import contextmanager
 
+from p5.core import p5, primitives, color
 
-from . import primitives
-from . import color
-from . import p5
 
 @contextmanager
 def push_style():

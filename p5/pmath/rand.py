@@ -18,9 +18,7 @@
 
 import random
 
-from ..pmath import constrain
-from .utils import SINCOS_LENGTH
-from .utils import PRE_COS
+
 
 __all__ = [
     # PERLIN NOISE FUNCTIONS
@@ -54,6 +52,8 @@ __all__ = [
 #P: demo "art": http://www.farb-rausch.de/fr010src.zip
 
 #P: Default to medium smooth
+from p5.pmath.utils import SINCOS_LENGTH, PRE_COS, constrain
+
 PERLIN_OCTAVES = 4
 
 #P: 50% redution per octave

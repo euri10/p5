@@ -20,7 +20,7 @@
 """
 
 from functools import wraps
-from ..pmath import Point
+
 
 __all__ = [
     # BEZIER METHODS
@@ -32,6 +32,8 @@ __all__ = [
     # QUADRATIC METHODS
     'quadratic_point'
 ]
+
+from p5.pmath.vector import Point
 
 curve_resolution = 20
 curve_tightness_amount = 0

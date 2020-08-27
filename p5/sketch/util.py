@@ -1,6 +1,8 @@
 import pkgutil
 import os
-from ..core import p5
+
+from p5.core import p5
+
 
 def read_shader(filename):
     """Reads a shader in string mode and returns the content

@@ -15,12 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
-from . import p5
-from . import primitives
-from .shape import PShape
-from .constants import TESS
-from ..pmath import curves
+from p5.core import p5, primitives
+from p5.core.constants import TESS
+from p5.core.shape import PShape
+from p5.pmath import curves
 
 shape_kind = None
 vertices = [] # stores the vertex coordinates

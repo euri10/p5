@@ -1,6 +1,12 @@
 # Adapted from
 import cProfile, random
-from p5 import *
+import numpy as np
+
+from p5.core.transforms import push_matrix, rotate, translate
+from p5.core.vertex import begin_shape, vertex, end_shape
+from p5.pmath.rand import random_uniform
+from p5.pmath.utils import PI
+from p5.sketch.userspace import size, run
 
 FRAME_MAX = 1000
 
