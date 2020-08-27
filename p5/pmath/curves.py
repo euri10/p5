@@ -20,18 +20,22 @@
 """
 
 from functools import wraps
-from ..pmath import Point
 
 __all__ = [
     # BEZIER METHODS
-    'bezier_point', 'bezier_tangent', 'bezier_detail',
-
+    "bezier_point",
+    "bezier_tangent",
+    "bezier_detail",
     # CURVE METHODS
-    'curve_point', 'curve_tangent', 'curve_detail', 'curve_tightness',
-
+    "curve_point",
+    "curve_tangent",
+    "curve_detail",
+    "curve_tightness",
     # QUADRATIC METHODS
-    'quadratic_point'
+    "quadratic_point",
 ]
+
+from p5.pmath.vector import Point
 
 curve_resolution = 20
 curve_tightness_amount = 0
@@ -42,18 +46,22 @@ curve_basis_matrix = [
     [-0.5, 1.5, -1.5, 0.5],
     [1, -2.5, 2, -0.5],
     [-0.5, 0, 0.5, 0],
-    [0, 1, 0, 0]
+    [0, 1, 0, 0],
 ]
+
 
 def typecast_arguments_as_points(func):
     """Typecast all but the last argument of the function as Points."""
+
     @wraps(func)
     def decorated(*args, **kwargs):
         new_args = [Point(*arg) for arg in args[:-1]]
         new_args.append(args[-1])
         ret_value = func(*new_args, **kwargs)
         return ret_value
+
     return decorated
+
 
 def bezier_detail(detail_value):
     """Change the resolution used to draw bezier curves.
@@ -63,6 +71,7 @@ def bezier_detail(detail_value):
     """
     global bezier_resolution
     bezier_resolution = max(1, detail_value)
+
 
 @typecast_arguments_as_points
 def bezier_point(start, control_1, control_2, stop, parameter):
@@ -93,12 +102,13 @@ def bezier_point(start, control_1, control_2, stop, parameter):
     t_ = 1 - parameter
 
     P = [start, control_1, control_2, stop]
-    coeffs = [t_*t_*t_, 3*t*t_*t_,  3*t*t*t_, t*t*t]
+    coeffs = [t_ * t_ * t_, 3 * t * t_ * t_, 3 * t * t * t_, t * t * t]
 
     x = sum(pt.x * c for pt, c in zip(P, coeffs))
     y = sum(pt.y * c for pt, c in zip(P, coeffs))
 
     return Point(x, y)
+
 
 @typecast_arguments_as_points
 def bezier_tangent(start, control_1, control_2, stop, parameter):
@@ -128,16 +138,20 @@ def bezier_tangent(start, control_1, control_2, stop, parameter):
 
     """
     t = parameter
-    tangent = lambda a, b, c, d: 3*t*t*(3*b - 3*c + d - a) + \
-                                 6*t*(a - 2*b + c) + \
-                                 3*(b - a)
+    tangent = (
+        lambda a, b, c, d: 3 * t * t * (3 * b - 3 * c + d - a)
+        + 6 * t * (a - 2 * b + c)
+        + 3 * (b - a)
+    )
     x = tangent(start.x, control_1.x, control_2.x, stop.x)
     y = tangent(start.y, control_1.y, control_2.y, stop.y)
     return Point(x, y)
 
+
 def _reinit_curve_matrices():
     # TODO: Add basis matrices for faster tessellation.
     pass
+
 
 def curve_detail(detail_value):
     """Change the resolution used to draw bezier curves.
@@ -148,6 +162,7 @@ def curve_detail(detail_value):
     global curve_resolution
     curve_resolution = detail_value
 
+
 def curve_tightness(amount):
     """Change the curve tightness used to draw curves.
 
@@ -157,6 +172,7 @@ def curve_tightness(amount):
     global curve_tightness_amount
     curve_tightness_amount = amount
     _reinit_curve_matrices()
+
 
 @typecast_arguments_as_points
 def curve_point(point_1, point_2, point_3, point_4, parameter):
@@ -189,12 +205,13 @@ def curve_point(point_1, point_2, point_3, point_4, parameter):
     basis = curve_basis_matrix
     P = [point_1, point_2, point_3, point_4]
 
-    coeffs = [sum(t**(3 - i) * basis[i][j] for i in range(4)) for j in range(4)]
+    coeffs = [sum(t ** (3 - i) * basis[i][j] for i in range(4)) for j in range(4)]
 
     x = sum(pt.x * c for pt, c in zip(P, coeffs))
     y = sum(pt.y * c for pt, c in zip(P, coeffs))
 
     return Point(x, y)
+
 
 @typecast_arguments_as_points
 def curve_tangent(point_1, point_2, point_3, point_4, parameter):
@@ -227,14 +244,14 @@ def curve_tangent(point_1, point_2, point_3, point_4, parameter):
     P = [point_1, point_2, point_3, point_4]
 
     coeffs = [
-        sum((3 - i)*(t**(2 - i)) * basis[i][j] for i in range(3))
-        for j in range(4)
+        sum((3 - i) * (t ** (2 - i)) * basis[i][j] for i in range(3)) for j in range(4)
     ]
 
     x = sum(pt.x * c for pt, c in zip(P, coeffs))
     y = sum(pt.y * c for pt, c in zip(P, coeffs))
 
     return Point(x, y)
+
 
 @typecast_arguments_as_points
 def quadratic_point(start, control, stop, parameter):
@@ -264,12 +281,13 @@ def quadratic_point(start, control, stop, parameter):
     t_ = 1 - parameter
 
     P = [start, control, stop]
-    coeffs = [t_*t_, 2*t*t_, t*t]
+    coeffs = [t_ * t_, 2 * t * t_, t * t]
 
     x = sum(pt.x * c for pt, c in zip(P, coeffs))
     y = sum(pt.y * c for pt, c in zip(P, coeffs))
 
     return Point(x, y)
+
 
 # Set the default values.
 bezier_detail(20)

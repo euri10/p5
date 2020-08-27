@@ -16,19 +16,34 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-from contextlib import contextmanager
-import numpy as np
 import math
-import builtins
-from ..pmath import matrix
+from contextlib import contextmanager
 
+import numpy as np
+
+from ..pmath import matrix
 from . import p5
 
-__all__ = ['push_matrix', 'reset_transforms', 
-           'translate', 'rotate', 'rotate_x', 'rotate_y', 
-           'rotate_z', 'scale', 'shear_x', 'shear_y', 
-           'camera', 'frustum', 'ortho', 'perspective',
-           'print_matrix', 'reset_matrix', 'apply_matrix']
+__all__ = [
+    "push_matrix",
+    "reset_transforms",
+    "translate",
+    "rotate",
+    "rotate_x",
+    "rotate_y",
+    "rotate_z",
+    "scale",
+    "shear_x",
+    "shear_y",
+    "camera",
+    "frustum",
+    "ortho",
+    "perspective",
+    "print_matrix",
+    "reset_matrix",
+    "apply_matrix",
+]
+
 
 @contextmanager
 def push_matrix():
@@ -38,11 +53,11 @@ def push_matrix():
     finally:
         p5.renderer.transform_matrix = previous_matrix
 
-def reset_transforms():
-    """Reset all transformations to their default state.
 
-    """
+def reset_transforms():
+    """Reset all transformations to their default state."""
     p5.renderer.transform_matrix = np.identity(4)
+
 
 def translate(x, y, z=0):
     """Translate the display origin to the given location.
@@ -70,6 +85,7 @@ def translate(x, y, z=0):
     p5.renderer.transform_matrix = p5.renderer.transform_matrix.dot(tmat)
     return tmat
 
+
 def rotate(theta, axis=np.array([0, 0, 1])):
     """Rotate the display by the given angle along the given axis.
 
@@ -82,11 +98,12 @@ def rotate(theta, axis=np.array([0, 0, 1])):
     :returns: The rotation matrix used to apply the transformation.
     :rtype: np.ndarray
 
-   """
+    """
     axis = np.array(axis[:])
     tmat = matrix.rotation_matrix(axis, theta)
     p5.renderer.transform_matrix = p5.renderer.transform_matrix.dot(tmat)
     return tmat
+
 
 def rotate_x(theta):
     """Rotate the view along the x axis.
@@ -100,6 +117,7 @@ def rotate_x(theta):
     """
     rotate(theta, axis=np.array([1, 0, 0]))
 
+
 def rotate_y(theta):
     """Rotate the view along the y axis.
 
@@ -109,8 +127,9 @@ def rotate_y(theta):
     :returns: The rotation matrix used to apply the transformation.
     :rtype: np.ndarray
 
-   """
+    """
     rotate(theta, axis=np.array([0, 1, 0]))
+
 
 def rotate_z(theta):
     """Rotate the view along the z axis.
@@ -121,8 +140,9 @@ def rotate_z(theta):
     :returns: The rotation matrix used to apply the transformation.
     :rtype: np.ndarray
 
-   """
+    """
     rotate(theta, axis=np.array([0, 0, 1]))
+
 
 def scale(sx, sy=None, sz=None):
     """Scale the display by the given factor.
@@ -148,6 +168,7 @@ def scale(sx, sy=None, sz=None):
     p5.renderer.transform_matrix = p5.renderer.transform_matrix.dot(tmat)
     return tmat
 
+
 def apply_matrix(transform_matrix):
     """Apply the given matrix to the sketch's transform matrix..
 
@@ -157,15 +178,16 @@ def apply_matrix(transform_matrix):
     tmatrix = np.array(transform_matrix)
     p5.renderer.transform_matrix = p5.renderer.transform_matrix.dot(tmatrix)
 
+
 def reset_matrix():
-    """Reset the current transform matrix.
-    """
+    """Reset the current transform matrix."""
     p5.renderer.transform_matrix = np.identity(4)
 
+
 def print_matrix():
-    """Print the transform matrix being used by the sketch.
-    """
+    """Print the transform matrix being used by the sketch."""
     print(p5.renderer.transform_matrix)
+
 
 def shear_x(theta):
     """Shear display along the x-axis.
@@ -182,6 +204,7 @@ def shear_x(theta):
     p5.renderer.transform_matrix = p5.renderer.transform_matrix.dot(shear_mat)
     return shear_mat
 
+
 def shear_y(theta):
     """Shear display along the y-axis.
 
@@ -197,14 +220,15 @@ def shear_y(theta):
     p5.renderer.transform_matrix = p5.renderer.transform_matrix.dot(shear_mat)
     return shear_mat
 
+
 def camera(position=None, target_position=(0, 0, 0), up_vector=(0, 1, 0)):
-    """Sets the camera position for a 3D sketch. 
-    Parameters for this function define the position for 
-    the camera, the center of the sketch (where the 
-    camera is pointing), and an up direction (the 
+    """Sets the camera position for a 3D sketch.
+    Parameters for this function define the position for
+    the camera, the center of the sketch (where the
+    camera is pointing), and an up direction (the
     orientation of the camera).
 
-    When called with no arguments, this function 
+    When called with no arguments, this function
     creates a default camera equivalent to::
 
         camera((0, 0, height / math.tan(math.pi / 6))),
@@ -214,28 +238,30 @@ def camera(position=None, target_position=(0, 0, 0), up_vector=(0, 1, 0)):
     :param position: camera position coordinates
     :type position: tuple
 
-    :param target_position: target position of camera in world coordinates 
+    :param target_position: target position of camera in world coordinates
     :type target_position: tuple
 
     :param up_vector: up direction vector for the camera
     :type up_vector: tuple
 
     """
-    # Not setting this as a default argument gets around the problem that sketch.size is not initialized when
+    # Not setting this as a default argument gets around the problem that sketch.size
+    # is not initialized when
     # default arguments are initialized
     if position is None:
         position = (0, 0, p5.sketch.size[1] / math.tan(math.pi / 6))
     p5.renderer.lookat_matrix = matrix.look_at(
-        np.array(position), 
-        np.array(target_position), 
-        np.array(up_vector))
+        np.array(position), np.array(target_position), np.array(up_vector)
+    )
     p5.renderer.camera_pos = np.array(position)
+
 
 def perspective(fovy, aspect, near, far):
     """
-    Sets a perspective projection for the camera in a 3D sketch.  
+    Sets a perspective projection for the camera in a 3D sketch.
 
-    :param fovy: camera frustum vertical field of view, from bottom to top of view, in angleMode units
+    :param fovy: camera frustum vertical field of view, from bottom to top of view,
+    in angleMode units
     :type fovy: float
 
     :param aspect: camera frustum aspect ratio
@@ -245,14 +271,10 @@ def perspective(fovy, aspect, near, far):
     :type near: float
 
     :param far: frustum far plane length
-    :type far: float   
+    :type far: float
     """
-    p5.renderer.projection_matrix = matrix.perspective_matrix(
-            fovy,
-            aspect,
-            near,
-            far
-        )
+    p5.renderer.projection_matrix = matrix.perspective_matrix(fovy, aspect, near, far)
+
 
 def ortho(left, right, bottom, top, near, far):
     """
@@ -276,14 +298,17 @@ def ortho(left, right, bottom, top, near, far):
     :type near: float
 
     :param far: camera frustum far plane
-    :type far: float   
+    :type far: float
     """
-    p5.renderer.projection_matrix = np.array([
-        [2/(right - left), 0, 0, -(right + left)/(right - left)],
-        [0, 2/(top - bottom), 0, -(top + bottom)/(top - bottom)],
-        [0, 0, -2/(far - near), -(far + near)/(far - near)],
-        [0, 0, 0, 1],
-        ])
+    p5.renderer.projection_matrix = np.array(
+        [
+            [2 / (right - left), 0, 0, -(right + left) / (right - left)],
+            [0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom)],
+            [0, 0, -2 / (far - near), -(far + near) / (far - near)],
+            [0, 0, 0, 1],
+        ]
+    )
+
 
 def frustum():
     raise NotImplementedError

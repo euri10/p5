@@ -18,30 +18,30 @@
 
 import builtins
 
+from . import p5
 from .color import Color
-from .image import image
-from .image import image_mode
-from .image import PImage
+from .image import PImage, image, image_mode
 from .structure import push_style
 from .transforms import push_matrix
 
-from . import p5
+__all__ = [
+    "background",
+    "clear",
+    "fill",
+    "no_fill",
+    "stroke",
+    "no_stroke",
+    "tint",
+    "no_tint",
+    "stroke_weight",
+    "stroke_cap",
+    "stroke_join",
+]
 
-__all__ = [ 'background', 'clear', 'fill', 'no_fill',
-            'stroke', 'no_stroke', 'tint', 'no_tint' , 
-            'stroke_weight', 'stroke_cap', 'stroke_join']
+stroke_cap_codes = {"PROJECT": 0, "SQUARE": 1, "ROUND": 2}
 
-stroke_cap_codes = {
-    'PROJECT': 0,
-    'SQUARE': 1,
-    'ROUND': 2
-}
+stroke_join_codes = {"MITER": 0, "BEVEL": 1, "ROUND": 2}
 
-stroke_join_codes = {
-    'MITER': 0,
-    'BEVEL': 1,
-    'ROUND': 2
-}
 
 def fill(*fill_args, **fill_kwargs):
     """Set the fill color of the shapes.
@@ -62,9 +62,11 @@ def fill(*fill_args, **fill_kwargs):
     p5.renderer.fill_color = fill_color.normalized
     return fill_color
 
+
 def no_fill():
     """Disable filling geometry."""
     p5.renderer.fill_enabled = False
+
 
 def stroke(*color_args, **color_kwargs):
     """Set the color used to draw lines around shapes
@@ -85,8 +87,10 @@ def stroke(*color_args, **color_kwargs):
     p5.renderer.stroke_enabled = True
     p5.renderer.stroke_color = stroke_color.normalized
 
+
 def stroke_weight(thickness):
-    """Sets the width of the stroke used for lines, points, and the border around shapes. All widths are set in units of pixels.
+    """Sets the width of the stroke used for lines, points, and the border around
+    shapes. All widths are set in units of pixels.
 
     :param weight: thickness of stroke in pixels
     :type weight: int
@@ -94,12 +98,14 @@ def stroke_weight(thickness):
     """
     p5.renderer.stroke_weight = thickness
 
+
 def no_stroke():
     """Disable drawing the stroke around shapes."""
     p5.renderer.stroke_enabled = False
 
+
 def stroke_cap(c):
-    """Sets the style of line endings. The ends are SQUARE, 
+    """Sets the style of line endings. The ends are SQUARE,
     PROJECT, and ROUND. The default cap is ROUND.
 
     :param c: either 'SQUARE', 'PROJECT' or 'ROUND'
@@ -111,10 +117,11 @@ def stroke_cap(c):
     else:
         raise ValueError("Invalid Stroke Cap %s" % c)
 
+
 def stroke_join(j):
-    """Sets the style of the joints which connect line segments. 
-    These joints are either mitered, beveled, or rounded and 
-    specified with the corresponding parameters MITER, BEVEL, 
+    """Sets the style of the joints which connect line segments.
+    These joints are either mitered, beveled, or rounded and
+    specified with the corresponding parameters MITER, BEVEL,
     and ROUND. The default joint is MITER.
 
     :param weight: either 'MITER', 'BEVEL' or 'ROUND'
@@ -125,6 +132,7 @@ def stroke_join(j):
         p5.renderer.stroke_join = stroke_join_codes[j]
     else:
         raise ValueError("Invalid Stroke Cap %s" % j)
+
 
 def tint(*color_args, **color_kwargs):
     """Set the tint color for the sketch.
@@ -145,9 +153,11 @@ def tint(*color_args, **color_kwargs):
     p5.renderer.tint_enabled = True
     p5.renderer.tint_color = tint_color.normalized
 
+
 def no_tint():
     """Disable tinting of images."""
     p5.renderer.tint_enabled = False
+
 
 def background(*args, **kwargs):
     """Set the background color for the p5.renderer.
@@ -181,7 +191,7 @@ def background(*args, **kwargs):
 
         with push_style():
             no_tint()
-            image_mode('corner')
+            image_mode("corner")
             with push_matrix():
                 image(background_image, (0, 0))
 
@@ -196,8 +206,9 @@ def background(*args, **kwargs):
             p5.renderer.background_color = background_color.normalized
             p5.renderer.clear()
 
+
 def clear():
     """
-    Clears the pixels within a buffer. 
+    Clears the pixels within a buffer.
     """
     p5.renderer.clear()

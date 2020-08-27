@@ -23,33 +23,29 @@ import functools
 
 import numpy as np
 
-from .color import Color
-from .constants import SType
 from ..pmath import matrix
 from ..pmath.vector import Point
-
 from . import p5
+from .color import Color
+from .constants import SType
 
-__all__ = ['PShape']
+__all__ = ["PShape"]
 
 
 def _ensure_editable(func):
-    """A decorater that ensures that a shape is in 'edit' mode.
-
-    """
+    """A decorater that ensures that a shape is in 'edit' mode."""
 
     @functools.wraps(func)
     def editable_method(instance, *args, **kwargs):
         if not instance._in_edit_mode:
-            raise ValueError('{} only works in edit mode'.format(func.__name__))
+            raise ValueError("{} only works in edit mode".format(func.__name__))
         return func(instance, *args, **kwargs)
 
     return editable_method
 
 
 def _apply_transform(func):
-    """Apply the matrix transformation to the shape.
-    """
+    """Apply the matrix transformation to the shape."""
 
     @functools.wraps(func)
     def mfunc(instance, *args, **kwargs):
@@ -61,8 +57,7 @@ def _apply_transform(func):
 
 
 def _call_on_children(func):
-    """Call the method on all child shapes
-    """
+    """Call the method on all child shapes"""
 
     @functools.wraps(func)
     def rfunc(instance, *args, **kwargs):
@@ -97,11 +92,19 @@ class PShape:
 
     """
 
-    def __init__(self, fill_color='auto',
-                 stroke_color='auto', stroke_weight="auto",
-                 stroke_join="auto", stroke_cap="auto",
-                 visible=False,
-                 children=None, contours=tuple(), vertices=tuple(), shape_type=SType.TESS):
+    def __init__(
+        self,
+        fill_color="auto",
+        stroke_color="auto",
+        stroke_weight="auto",
+        stroke_join="auto",
+        stroke_cap="auto",
+        visible=False,
+        children=None,
+        contours=tuple(),
+        vertices=tuple(),
+        shape_type=SType.TESS,
+    ):
         # basic properties of the shape
         self._fill = None
         self._stroke = None
@@ -135,16 +138,14 @@ class PShape:
         if isinstance(value, Color):  # Is Color, no need to parse
             color = value
         else:  # Not Color, attempt to parse it
-            if name == 'stroke' and p5.renderer.stroke_enabled:
-                color = Color(*p5.renderer.stroke_color,
-                              color_mode='RGBA', normed=True)
-            if name == 'fill' and p5.renderer.fill_enabled:
-                color = Color(*p5.renderer.fill_color,
-                              color_mode='RGBA', normed=True)
+            if name == "stroke" and p5.renderer.stroke_enabled:
+                color = Color(*p5.renderer.stroke_color, color_mode="RGBA", normed=True)
+            if name == "fill" and p5.renderer.fill_enabled:
+                color = Color(*p5.renderer.fill_color, color_mode="RGBA", normed=True)
 
-        if name == 'stroke':
+        if name == "stroke":
             self._stroke = color
-        elif name == 'fill':
+        elif name == "fill":
             self._fill = color
 
     @property
@@ -153,7 +154,7 @@ class PShape:
 
     @fill.setter
     def fill(self, new_color):
-        self._set_color('fill', new_color)
+        self._set_color("fill", new_color)
 
     @property
     def stroke(self):
@@ -161,7 +162,7 @@ class PShape:
 
     @stroke.setter
     def stroke(self, new_color):
-        self._set_color('stroke', new_color)
+        self._set_color("stroke", new_color)
 
     @property
     def stroke_weight(self):
@@ -195,7 +196,6 @@ class PShape:
             self._stroke_cap = p5.renderer.stroke_cap
         else:
             self._stroke_cap = stroke
-
 
     @contextlib.contextmanager
     def edit(self, reset=True):
@@ -276,9 +276,7 @@ class PShape:
 
     @_call_on_children
     def reset_matrix(self):
-        """Reset the transformation matrix associated with the shape.
-
-        """
+        """Reset the transformation matrix associated with the shape."""
         self._matrix = np.identity(4)
 
     @_call_on_children

@@ -1,23 +1,27 @@
 from abc import ABC
+
 import numpy as np
+from OpenGL.GLU import (
+    gluTessBeginContour,
+    gluTessBeginPolygon,
+    gluTessEndContour,
+    gluTessEndPolygon,
+    gluTessVertex,
+)
+from vispy.gloo import FrameBuffer, IndexBuffer, Program, VertexBuffer
 
 from ..core import p5
 from ..core.constants import SType
 from ..core.primitives import Arc
 
-from vispy.gloo import Program, VertexBuffer, FrameBuffer, IndexBuffer
-from OpenGL.GLU import gluTessBeginPolygon, gluTessBeginContour, gluTessEndPolygon, gluTessEndContour, gluTessVertex
-
 
 def to_3x3(mat):
-    """Returns the upper left 3x3 corner of an np.array
-    """
+    """Returns the upper left 3x3 corner of an np.array"""
     return mat[:3, :3]
 
 
 def _tess_new_contour(vertices):
-    """Given a list of vertices, evoke gluTess to create a contour
-    """
+    """Given a list of vertices, evoke gluTess to create a contour"""
     gluTessBeginContour(p5.tess.tess)
     for v in vertices:
         gluTessVertex(p5.tess.tess, v, v)
@@ -25,16 +29,19 @@ def _tess_new_contour(vertices):
 
 
 def _vertices_to_render_primitive(gl_name, vertices):
-    """Returns a render primitive of gl_type with vertices in sequential order
-    """
+    """Returns a render primitive of gl_type with vertices in sequential order"""
     return [gl_name, np.asarray(vertices), np.arange(len(vertices), dtype=np.uint32)]
 
 
 def _get_line_from_verts(vertices):
-    """Given a list of vertices, chain them sequentially in a line rendering primitive
-    """
+    """Given a list of vertices, chain them sequentially in a line rendering
+    primitive"""
     n_vert = len(vertices)
-    return _get_line_from_indices(vertices, np.arange(n_vert - 1, dtype=np.uint32), np.arange(1, n_vert, dtype=np.uint32))
+    return _get_line_from_indices(
+        vertices,
+        np.arange(n_vert - 1, dtype=np.uint32),
+        np.arange(1, n_vert, dtype=np.uint32),
+    )
 
 
 def _get_line_from_indices(vertices, start, end):
@@ -51,12 +58,16 @@ def _get_line_from_indices(vertices, start, end):
     """
     start = np.asarray(start, dtype=np.uint32)
     end = np.asarray(end, dtype=np.uint32)
-    return ['lines', np.asarray(vertices),
-            np.hstack((np.vstack(start), np.vstack(end)))]
+    return [
+        "lines",
+        np.asarray(vertices),
+        np.hstack((np.vstack(start), np.vstack(end))),
+    ]
 
 
 def _add_edges_to_primitive_list(primitive_list, vertices, start, end):
-    """Adds edges to a list of render primitives, given their start and end positions (in vertex indices)
+    """Adds edges to a list of render primitives, given their start and end positions
+    (in vertex indices)
 
     :param start: Array of start positions of edges in vertex indices
     :type start: np.ndarray
@@ -68,20 +79,20 @@ def _add_edges_to_primitive_list(primitive_list, vertices, start, end):
 
 
 def _not_enough_vertices(shape, n):
-    """Returns an error string that describes how many vertices are needed
-    """
+    """Returns an error string that describes how many vertices are needed"""
     return "Need at least {} vertices for {}".format(n, shape)
 
 
 def _wrong_multiple(shape, n):
-    """Returns an error string that describes the # of vertices is not a multiple of n
-    """
-    return "{} requires the number of vertices to be a multiple of {}".format(shape.shape_type, n)
+    """Returns an error string that describes the # of vertices
+    is not a multiple of n"""
+    return "{} requires the number of vertices to be a multiple of {}".format(
+        shape.shape_type, n
+    )
 
 
 def _check_shape(shape):
-    """Checks if the shape is valid using assertions
-    """
+    """Checks if the shape is valid using assertions"""
     n_vert = len(shape.vertices)
     if shape.shape_type in [SType.TRIANGLES, SType.TRIANGLE_FAN, SType.TRIANGLE_STRIP]:
         assert n_vert >= 3, _not_enough_vertices(shape, 3)
@@ -143,16 +154,26 @@ def _get_meshes(shape):
     """
     render_primitives = []
     n_vert = len(shape.vertices)
-    if shape.shape_type in [SType.TRIANGLES, SType.TRIANGLE_STRIP, SType.TRIANGLE_FAN, SType.QUAD_STRIP]:
+    if shape.shape_type in [
+        SType.TRIANGLES,
+        SType.TRIANGLE_STRIP,
+        SType.TRIANGLE_FAN,
+        SType.QUAD_STRIP,
+    ]:
         gl_name = shape.shape_type.name.lower()
-        if gl_name == 'quad_strip':  # vispy does not support quad_strip
-            gl_name = 'triangle_strip'  # but it can be drawn using triangle_strip
+        if gl_name == "quad_strip":  # vispy does not support quad_strip
+            gl_name = "triangle_strip"  # but it can be drawn using triangle_strip
         render_primitives.append(_vertices_to_render_primitive(gl_name, shape.vertices))
     elif shape.shape_type == SType.QUADS:
         n_quad = len(shape.vertices) // 4
-        render_primitives.append(['triangles', np.asarray(shape.vertices),
-                                  np.repeat(np.arange(0, n_vert, 4, dtype=np.uint32), 6) +
-                                  np.tile(np.array([0, 1, 2, 0, 2, 3], dtype=np.uint32), n_quad)])
+        render_primitives.append(
+            [
+                "triangles",
+                np.asarray(shape.vertices),
+                np.repeat(np.arange(0, n_vert, 4, dtype=np.uint32), 6)
+                + np.tile(np.array([0, 1, 2, 0, 2, 3], dtype=np.uint32), n_quad),
+            ]
+        )
     elif shape.shape_type == SType.TESS:
         gluTessBeginPolygon(p5.tess.tess, None)
         _tess_new_contour(shape.vertices)
@@ -165,8 +186,8 @@ def _get_meshes(shape):
 
 
 def get_render_primitives(shape):
-    """Given a shape, return a list of render primitives in the form of [type, vertices, indices]
-    """
+    """Given a shape, return a list of render primitives in the form of
+    [type, vertices, indices]"""
     _check_shape(shape)
     render_primitives = []
     if isinstance(shape, Arc):
@@ -175,16 +196,18 @@ def get_render_primitives(shape):
             render_primitives.extend(_get_meshes(shape))
         # Render borders
         if p5.renderer.stroke_enabled:
-            if shape.arc_mode in ['CHORD', 'OPEN']:  # Implies shape.shape_type == TESS
+            if shape.arc_mode in ["CHORD", "OPEN"]:  # Implies shape.shape_type == TESS
                 render_primitives.extend(_get_borders(shape))
             elif shape.arc_mode is None:  # Implies shape.shape_type == TRIANGLE_FAN
                 render_primitives.append(_get_line_from_verts(shape.vertices[1:]))
-            elif shape.arc_mode == 'PIE':  # Implies shape.shape_type == TRIANGLE_FAN
+            elif shape.arc_mode == "PIE":  # Implies shape.shape_type == TRIANGLE_FAN
                 render_primitives.append(_get_line_from_verts(shape.vertices))
     else:
         # Render points
         if shape.shape_type == SType.POINTS:
-            render_primitives.append(_vertices_to_render_primitive(render_primitives, 'points'))
+            render_primitives.append(
+                _vertices_to_render_primitive(render_primitives, "points")
+            )
         # Render meshes
         if p5.renderer.fill_enabled:
             render_primitives.extend(_get_meshes(shape))
@@ -248,22 +271,18 @@ class OpenGLRenderer(ABC):
     def initialize_renderer(self):
         self.fbuffer = FrameBuffer()
 
-        vertices = np.array([[-1.0, -1.0],
-                             [+1.0, -1.0],
-                             [-1.0, +1.0],
-                             [+1.0, +1.0]],
-                            np.float32)
-        texcoords = np.array([[0.0, 0.0],
-                              [1.0, 0.0],
-                              [0.0, 1.0],
-                              [1.0, 1.0]],
-                             dtype=np.float32)
+        vertices = np.array(
+            [[-1.0, -1.0], [+1.0, -1.0], [-1.0, +1.0], [+1.0, +1.0]], np.float32
+        )
+        texcoords = np.array(
+            [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]], dtype=np.float32
+        )
 
         self.fbuf_vertices = VertexBuffer(data=vertices)
         self.fbuf_texcoords = VertexBuffer(data=texcoords)
 
-        self.fbuffer_prog['texcoord'] = self.fbuf_texcoords
-        self.fbuffer_prog['position'] = self.fbuf_vertices
+        self.fbuffer_prog["texcoord"] = self.fbuf_texcoords
+        self.fbuffer_prog["position"] = self.fbuf_vertices
 
         self.vertex_buffer = VertexBuffer()
         self.index_buffer = IndexBuffer()
@@ -281,9 +300,9 @@ class OpenGLRenderer(ABC):
 
         # 2. Create empty buffers based on the number of vertices.
         #
-        data = np.zeros(num_vertices,
-                        dtype=[('position', np.float32, 3),
-                               ('color', np.float32, 4)])
+        data = np.zeros(
+            num_vertices, dtype=[("position", np.float32, 3), ("color", np.float32, 4)]
+        )
 
         # 3. Loop through all the shapes in the geometry queue adding
         # it's information to the buffer.
@@ -293,10 +312,12 @@ class OpenGLRenderer(ABC):
         for vertices, idx, color in draw_queue:
             num_shape_verts = len(vertices)
 
-            data['position'][sidx:(sidx + num_shape_verts), ] = np.array(vertices)
+            data["position"][
+                sidx : (sidx + num_shape_verts),
+            ] = np.array(vertices)
 
             color_array = np.array([color] * num_shape_verts)
-            data['color'][sidx:sidx + num_shape_verts, :] = color_array
+            data["color"][sidx : sidx + num_shape_verts, :] = color_array
 
             draw_indices.append(sidx + idx)
 

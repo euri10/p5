@@ -21,23 +21,36 @@ import math
 
 import numpy as np
 
-from ..pmath import Point
-from ..pmath import curves
-from ..pmath.utils import SINCOS
 
-from .shape import PShape
-from .geometry import Geometry
-from .constants import SType
+__all__ = [
+    "Arc",
+    "point",
+    "line",
+    "arc",
+    "triangle",
+    "quad",
+    "rect",
+    "square",
+    "circle",
+    "ellipse",
+    "ellipse_mode",
+    "rect_mode",
+    "bezier",
+    "curve",
+    "create_shape",
+    "draw_shape",
+]
 
-from . import p5
+from p5.core import p5
+from p5.core.constants import SType
+from p5.core.shape import PShape
+from p5.pmath import curves
+from p5.pmath.utils import SINCOS
+from p5.pmath.vector import Point
 
-__all__ = ['Arc', 'point', 'line', 'arc', 'triangle', 'quad',
-           'rect', 'square', 'circle', 'ellipse', 'ellipse_mode',
-           'rect_mode', 'bezier', 'curve', 'create_shape', 'draw_shape']
-
-_rect_mode = 'CORNER'
-_ellipse_mode = 'CENTER'
-_shape_mode = 'CORNER'
+_rect_mode = "CORNER"
+_ellipse_mode = "CENTER"
+_shape_mode = "CORNER"
 
 # We use these in ellipse tessellation. The algorithm is similar to
 # the one used in Processing and the we compute the number of
@@ -61,10 +74,10 @@ MIN_POINT_ACCURACY = 20
 MAX_POINT_ACCURACY = 200
 POINT_ACCURACY_FACTOR = 10
 
-def _draw_on_return(func):
-    """Set shape parameters to default renderer parameters
 
-    """
+def _draw_on_return(func):
+    """Set shape parameters to default renderer parameters"""
+
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
         s = func(*args, **kwargs)
@@ -73,26 +86,42 @@ def _draw_on_return(func):
 
     return wrapped
 
+
 class Arc(PShape):
-    def __init__(self, center, radii, start_angle, stop_angle,
-                 mode=None, fill_color='auto',
-                 stroke_color='auto', stroke_weight="auto",
-                 stroke_join="auto", stroke_cap="auto", **kwargs):
+    def __init__(
+        self,
+        center,
+        radii,
+        start_angle,
+        stop_angle,
+        mode=None,
+        fill_color="auto",
+        stroke_color="auto",
+        stroke_weight="auto",
+        stroke_join="auto",
+        stroke_cap="auto",
+        **kwargs,
+    ):
         self._center = center
         self._radii = radii
         self._start_angle = start_angle
         self._stop_angle = stop_angle
         self.arc_mode = mode
 
-        gl_type = SType.TESS if mode in ['OPEN', 'CHORD'] else SType.TRIANGLE_FAN
-        super().__init__(fill_color=fill_color,
-                         stroke_color=stroke_color, stroke_weight=stroke_weight,
-                         stroke_join=stroke_join, stroke_cap=stroke_cap, shape_type=gl_type, **kwargs)
+        gl_type = SType.TESS if mode in ["OPEN", "CHORD"] else SType.TRIANGLE_FAN
+        super().__init__(
+            fill_color=fill_color,
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_join=stroke_join,
+            stroke_cap=stroke_cap,
+            shape_type=gl_type,
+            **kwargs,
+        )
         self._tessellate()
 
     def _tessellate(self):
-        """Generate vertex and face data using radii.
-        """
+        """Generate vertex and face data using radii."""
         rx = self._radii[0]
         ry = self._radii[1]
 
@@ -104,8 +133,10 @@ class Arc(PShape):
         c2y = c1y + ry
         s2 = p5.renderer.transform_matrix.dot(np.array([c2x, c2y, 0, 1]))
 
-        sdiff = (s2 - s1)
-        size_acc = (np.sqrt(np.sum(sdiff * sdiff)) * math.pi * 2) / POINT_ACCURACY_FACTOR
+        sdiff = s2 - s1
+        size_acc = (
+            np.sqrt(np.sum(sdiff * sdiff)) * math.pi * 2
+        ) / POINT_ACCURACY_FACTOR
 
         acc = min(MAX_POINT_ACCURACY, max(MIN_POINT_ACCURACY, int(size_acc)))
         inc = int(len(SINCOS) / acc)
@@ -114,22 +145,21 @@ class Arc(PShape):
         start_index = int((self._start_angle / (math.pi * 2)) * sclen)
         end_index = int((self._stop_angle / (math.pi * 2)) * sclen)
 
-        vertices = [(c1x, c1y, 0)] if self.arc_mode in ['PIE', None] else []
+        vertices = [(c1x, c1y, 0)] if self.arc_mode in ["PIE", None] else []
         for idx in range(start_index, end_index, inc):
             i = idx % sclen
-            vertices.append((
-                c1x + rx * SINCOS[i][1],
-                c1y + ry * SINCOS[i][0],
-                0
-            ))
-        vertices.append((
-            c1x + rx * SINCOS[end_index % sclen][1],
-            c1y + ry * SINCOS[end_index % sclen][0],
-            0
-        ))
-        if self.arc_mode == 'CHORD' or self.arc_mode == 'PIE':
+            vertices.append((c1x + rx * SINCOS[i][1], c1y + ry * SINCOS[i][0], 0))
+        vertices.append(
+            (
+                c1x + rx * SINCOS[end_index % sclen][1],
+                c1y + ry * SINCOS[end_index % sclen][0],
+                0,
+            )
+        )
+        if self.arc_mode == "CHORD" or self.arc_mode == "PIE":
             vertices.append(vertices[0])
         self.vertices = vertices
+
 
 @_draw_on_return
 def point(x, y, z=0):
@@ -192,11 +222,9 @@ def line(*args):
     else:
         raise ValueError("Unexpected number of arguments passed to line()")
 
-    path = [
-        Point(*p1),
-        Point(*p2)
-    ]
+    path = [Point(*p1), Point(*p2)]
     return PShape(vertices=path, shape_type=SType.LINES)
+
 
 @_draw_on_return
 def bezier(start, control_point_1, control_point_2, stop):
@@ -224,11 +252,11 @@ def bezier(start, control_point_1, control_point_2, stop):
     steps = curves.bezier_resolution
     for i in range(steps + 1):
         t = i / steps
-        p = curves.bezier_point(start, control_point_1,
-                                control_point_2, stop, t)
+        p = curves.bezier_point(start, control_point_1, control_point_2, stop, t)
         vertices.append(p[:3])
 
     return PShape(vertices=vertices, shape_type=SType.LINE_STRIP)
+
 
 @_draw_on_return
 def curve(point_1, point_2, point_3, point_4):
@@ -259,6 +287,7 @@ def curve(point_1, point_2, point_3, point_4):
 
     return PShape(vertices=vertices, shape_type=SType.LINE_STRIP)
 
+
 @_draw_on_return
 def triangle(p1, p2, p3):
     """Return a triangle.
@@ -275,12 +304,9 @@ def triangle(p1, p2, p3):
     :returns: A triangle.
     :rtype: p5.PShape
     """
-    path = [
-        Point(*p1),
-        Point(*p2),
-        Point(*p3)
-    ]
+    path = [Point(*p1), Point(*p2), Point(*p3)]
     return PShape(vertices=path, shape_type=SType.TRIANGLES)
+
 
 @_draw_on_return
 def quad(p1, p2, p3, p4):
@@ -301,13 +327,9 @@ def quad(p1, p2, p3, p4):
     :returns: A quad.
     :rtype: PShape
     """
-    path = [
-        Point(*p1),
-        Point(*p2),
-        Point(*p3),
-        Point(*p4)
-    ]
+    path = [Point(*p1), Point(*p2), Point(*p3), Point(*p4)]
     return PShape(vertices=path, shape_type=SType.QUADS)
+
 
 def rect(coordinate, *args, mode=None):
     """Return a rectangle.
@@ -339,22 +361,22 @@ def rect(coordinate, *args, mode=None):
     if mode is None:
         mode = _rect_mode
 
-    if mode == 'CORNER':
+    if mode == "CORNER":
         corner = coordinate
         width, height = args
-    elif mode == 'CENTER':
+    elif mode == "CENTER":
         center = Point(*coordinate)
         width, height = args
-        corner = Point(center.x - width/2, center.y - height/2, center.z)
-    elif mode == 'RADIUS':
+        corner = Point(center.x - width / 2, center.y - height / 2, center.z)
+    elif mode == "RADIUS":
         center = Point(*coordinate)
         half_width, half_height = args
         corner = Point(center.x - half_width, center.y - half_height, center.z)
         width = 2 * half_width
         height = 2 * half_height
-    elif mode == 'CORNERS':
+    elif mode == "CORNERS":
         corner = Point(*coordinate)
-        corner_2, = args
+        (corner_2,) = args
         corner_2 = Point(*corner_2)
         width = corner_2.x - corner.x
         height = corner_2.y - corner.y
@@ -366,6 +388,7 @@ def rect(coordinate, *args, mode=None):
     p3 = Point(p2.x, p2.y + height, p2.z)
     p4 = Point(p1.x, p3.y, p3.z)
     return quad(p1, p2, p3, p4)
+
 
 def square(coordinate, side_length, mode=None):
     """Return a square.
@@ -398,11 +421,12 @@ def square(coordinate, side_length, mode=None):
     if mode is None:
         mode = _rect_mode
 
-    if mode == 'CORNERS':
+    if mode == "CORNERS":
         raise ValueError("Cannot draw square with {} mode".format(mode))
     return rect(coordinate, side_length, side_length, mode=mode)
 
-def rect_mode(mode='CORNER'):
+
+def rect_mode(mode="CORNER"):
     """Change the rect and square drawing mode for the p5.renderer.
 
     :param mode: The new mode for drawing rects. Should be one of
@@ -414,6 +438,7 @@ def rect_mode(mode='CORNER'):
     """
     global _rect_mode
     _rect_mode = mode
+
 
 @_draw_on_return
 def arc(*args, mode=None, ellipse_mode=None):
@@ -445,7 +470,8 @@ def arc(*args, mode=None, ellipse_mode=None):
 
     :type height: float
 
-    :param mode: The mode used to draw an arc can be any of {None, 'OPEN', 'CHORD', 'PIE'}.
+    :param mode: The mode used to draw an arc can be any of
+    {None, 'OPEN', 'CHORD', 'PIE'}.
 
     :type mode: str
 
@@ -472,19 +498,20 @@ def arc(*args, mode=None, ellipse_mode=None):
     else:
         emode = ellipse_mode
 
-    if emode == 'CORNER':
+    if emode == "CORNER":
         corner = Point(*coordinate)
-        dim = Point(width/2, height/2)
+        dim = Point(width / 2, height / 2)
         center = (corner.x + dim.x, corner.y + dim.y, corner.z)
-    elif emode == 'CENTER':
+    elif emode == "CENTER":
         center = Point(*coordinate)
         dim = Point(width / 2, height / 2)
-    elif emode == 'RADIUS':
+    elif emode == "RADIUS":
         center = Point(*coordinate)
         dim = Point(width, height)
     else:
         raise ValueError("Unknown arc mode {}".format(emode))
     return Arc(center, dim, start_angle, stop_angle, mode)
+
 
 def ellipse(*args, mode=None):
     """Return a ellipse.
@@ -535,16 +562,19 @@ def ellipse(*args, mode=None):
     if mode is None:
         mode = _ellipse_mode
 
-    if mode == 'CORNERS':
+    if mode == "CORNERS":
         corner = Point(*coordinate)
-        corner_2, = args
+        (corner_2,) = args
         corner_2 = Point(*corner_2)
         width = corner_2.x - corner.x
         height = corner_2.y - corner.y
-        mode = 'CORNER'
+        mode = "CORNER"
     else:
         width, height = args
-    return arc(coordinate, width, height, 0, math.pi * 2, mode='CHORD', ellipse_mode=mode)
+    return arc(
+        coordinate, width, height, 0, math.pi * 2, mode="CHORD", ellipse_mode=mode
+    )
+
 
 def circle(*args, mode=None):
     """Return a circle.
@@ -590,11 +620,12 @@ def circle(*args, mode=None):
     if mode is None:
         mode = _ellipse_mode
 
-    if mode == 'CORNERS':
+    if mode == "CORNERS":
         raise ValueError("Cannot create circle in CORNERS mode")
     return ellipse(coordinate, radius, radius, mode=mode)
 
-def ellipse_mode(mode='CENTER'):
+
+def ellipse_mode(mode="CENTER"):
     """Change the ellipse and circle drawing mode for the p5.renderer.
 
     :param mode: The new mode for drawing ellipses. Should be one of
@@ -606,6 +637,7 @@ def ellipse_mode(mode='CENTER'):
     """
     global _ellipse_mode
     _ellipse_mode = mode
+
 
 def draw_shape(shape, pos=(0, 0, 0)):
     """Draw the given shape at the specified location.
@@ -624,6 +656,7 @@ def draw_shape(shape, pos=(0, 0, 0)):
 
     for child_shape in shape.children:
         draw_shape(child_shape)
+
 
 def create_shape(kind=None, *args, **kwargs):
     """Create a new PShape
@@ -651,22 +684,32 @@ def create_shape(kind=None, *args, **kwargs):
     """
 
     # TODO: add 'box', 'sphere' support
-    valid_values = { None, 'point', 'line', 'triangle', 'quad',
-                     'rect', 'square', 'ellipse', 'circle', 'arc', }
+    # valid_values = {
+    #     None,
+    #     "point",
+    #     "line",
+    #     "triangle",
+    #     "quad",
+    #     "rect",
+    #     "square",
+    #     "ellipse",
+    #     "circle",
+    #     "arc",
+    # }
 
     def empty_shape(*args, **kwargs):
         return PShape()
 
     shape_map = {
-        'arc': arc,
-        'circle': circle,
-        'ellipse': ellipse,
-        'line': line,
-        'point': point,
-        'quad': quad,
-        'rect': rect,
-        'square': square,
-        'triangle': triangle,
+        "arc": arc,
+        "circle": circle,
+        "ellipse": ellipse,
+        "line": line,
+        "point": point,
+        "quad": quad,
+        "rect": rect,
+        "square": square,
+        "triangle": triangle,
         None: empty_shape,
     }
 

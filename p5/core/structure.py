@@ -17,10 +17,8 @@
 #
 from contextlib import contextmanager
 
+from . import color, p5, primitives
 
-from . import primitives
-from . import color
-from . import p5
 
 @contextmanager
 def push_style():
@@ -69,8 +67,10 @@ def push_style():
     prev_color_mode = color.color_parse_mode
     prev_color_range = color.color_range
 
-    prev_ambient, prev_diffuse, prev_specular, prev_shininess, prev_material = [None] * 5
-    if p5.mode == 'P3D':
+    prev_ambient, prev_diffuse, prev_specular, prev_shininess, prev_material = [
+        None
+    ] * 5
+    if p5.mode == "P3D":
         prev_ambient = p5.renderer.ambient
         prev_diffuse = p5.renderer.diffuse
         prev_specular = p5.renderer.specular
@@ -94,7 +94,7 @@ def push_style():
     color.prev_color_parse_mode = prev_color_mode
     color.prev_color_range = prev_color_range
 
-    if p5.mode == 'P3D':
+    if p5.mode == "P3D":
         p5.renderer.ambient = prev_ambient
         p5.renderer.diffuse = prev_diffuse
         p5.renderer.specular = prev_specular

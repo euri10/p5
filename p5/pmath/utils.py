@@ -20,31 +20,61 @@
 """
 
 import math
-from math import ceil, floor, exp, log, sqrt
-from math import degrees, radians
-from math import sin, cos, tan
-from math import asin, acos, atan, atan2
+from math import (
+    acos,
+    asin,
+    atan,
+    atan2,
+    ceil,
+    cos,
+    degrees,
+    exp,
+    floor,
+    log,
+    radians,
+    sin,
+    sqrt,
+    tan,
+)
 
 import numpy as np
 
 __all__ = [
     # TRIG FUNCTIONS
-    'sin', 'cos', 'tan', 'degrees', 'radians',
-
+    "sin",
+    "cos",
+    "tan",
+    "degrees",
+    "radians",
     # INVERSE TRIG FUNCTIONS
-    'asin', 'acos', 'atan', 'atan2',
-
+    "asin",
+    "acos",
+    "atan",
+    "atan2",
     # TRIG CONSTANTS
-    'TWO_PI', 'PI', 'HALF_PI', 'QUARTER_PI', 'TAU', 'HALF_TAU',
-
+    "TWO_PI",
+    "PI",
+    "HALF_PI",
+    "QUARTER_PI",
+    "TAU",
+    "HALF_TAU",
     # MATH FUNCTIONS FROM THE STANDARD LIBRARY (abs and round are
     # available in builtins.)
-    'ceil', 'floor', 'exp', 'log', 'sqrt',
-
+    "ceil",
+    "floor",
+    "exp",
+    "log",
+    "sqrt",
     # MATH FUNCTIONS DEFINED HERE
-
-    'constrain', 'lerp', 'remap', 'normalize', 'distance', 'dist',
-    'magnitude', 'mag', 'sq',
+    "constrain",
+    "lerp",
+    "remap",
+    "normalize",
+    "distance",
+    "dist",
+    "magnitude",
+    "mag",
+    "sq",
 ]
 
 TWO_PI = 2 * math.pi
@@ -60,8 +90,8 @@ HALF_TAU = math.pi
 SINCOS_PRECISION = 0.5
 SINCOS_LENGTH = int(360 / SINCOS_PRECISION)
 
-PRE_SIN = [ sin(radians(d) * SINCOS_PRECISION) for d in range(SINCOS_LENGTH) ]
-PRE_COS = [ cos(radians(d) * SINCOS_PRECISION) for d in range(SINCOS_LENGTH) ]
+PRE_SIN = [sin(radians(d) * SINCOS_PRECISION) for d in range(SINCOS_LENGTH)]
+PRE_COS = [cos(radians(d) * SINCOS_PRECISION) for d in range(SINCOS_LENGTH)]
 
 SINCOS = list(zip(PRE_SIN, PRE_COS))
 
@@ -69,8 +99,10 @@ SINCOS = list(zip(PRE_SIN, PRE_COS))
 def _sanitize(point, target_dimension=3):
     return list(point) + [0] * (target_dimension - len(point))
 
+
 def _is_numeric(val):
     return isinstance(val, int) or isinstance(val, float)
+
 
 def constrain(amount, low, high):
     """Constrain the given value in the specified range.
@@ -106,6 +138,7 @@ def constrain(amount, low, high):
     else:
         return amount
 
+
 def lerp(start, stop, amount):
     """Linearly interpolate the start value to the stop value.
 
@@ -127,12 +160,13 @@ def lerp(start, stop, amount):
 
     :param stop: The stop value
 
-    :param amount: The amount by which to interpolate. (:math:`0 \leq
-        amount \leq 1`).
+    :param amount: The amount by which to interpolate. (:math:`0 \\leq
+        amount \\leq 1`).
     :type amount: float
 
     """
     return start + amount * (stop - start)
+
 
 def remap(value, source_range, target_range):
     """Remap a value from the source range to the target range.
@@ -166,6 +200,7 @@ def remap(value, source_range, target_range):
     T = t1 - t0
     return t0 + ((value - s0) / S) * T
 
+
 def normalize(value, low, high):
     """Normalize the given value to the specified range.
 
@@ -193,6 +228,7 @@ def normalize(value, low, high):
     :type high: float
     """
     return remap(value, (low, high), (0, 1))
+
 
 def magnitude(x, y, z=0):
     """Return the magnitude of the given vector.
@@ -223,6 +259,7 @@ def magnitude(x, y, z=0):
     """
     return np.sqrt(np.sum(np.array([x, y, z]) ** 2))
 
+
 def distance(point_1, point_2):
     """Return the distance between two points.
 
@@ -250,6 +287,7 @@ def distance(point_1, point_2):
     p1 = np.array(_sanitize(point_1))
     p2 = np.array(_sanitize(point_2))
     return np.sqrt(np.sum((p1 - p2) ** 2))
+
 
 def sq(number):
     """Square a number.

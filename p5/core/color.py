@@ -19,15 +19,14 @@
 import colorsys
 import math
 
-from ..pmath import lerp
-from ..pmath import constrain
+__all__ = ["color_mode", "Color"]
 
-from .constants import colour_codes
+from p5.core.constants import colour_codes
+from p5.pmath.utils import constrain, lerp
 
-__all__ = ['color_mode', 'Color']
-
-color_parse_mode = 'RGB'
+color_parse_mode = "RGB"
 color_range = (255, 255, 255, 255)
+
 
 def color_mode(mode, max_1=255, max_2=None, max_3=None, max_alpha=255):
     """Set the color mode of the renderer.
@@ -65,7 +64,8 @@ def color_mode(mode, max_1=255, max_2=None, max_3=None, max_alpha=255):
     color_range = (max_1, max_2, max_3, max_alpha)
     color_parse_mode = mode
 
-def parse_color(*args, color_mode='RGB', normed=False, **kwargs):
+
+def parse_color(*args, color_mode="RGB", normed=False, **kwargs):
     """Parses a color from a range of different input formats.
 
     This assumes that the args and kwargs are in the following form:
@@ -102,10 +102,10 @@ def parse_color(*args, color_mode='RGB', normed=False, **kwargs):
 
     """
 
-    if 'alpha' in kwargs:
-        alpha = kwargs['alpha']
-    elif 'a' in kwargs:
-        alpha = kwargs['a']
+    if "alpha" in kwargs:
+        alpha = kwargs["alpha"]
+    elif "a" in kwargs:
+        alpha = kwargs["a"]
     else:
         alpha = 1 if normed else color_range[3]
 
@@ -123,11 +123,11 @@ def parse_color(*args, color_mode='RGB', normed=False, **kwargs):
                 rgb = (0, 0, 0)
             else:
                 if name[0] == "#":
-                    hexadecimal = args[0]                
+                    hexadecimal = args[0]
                 elif name in colour_codes.keys():
                     hexadecimal = colour_codes[name]
                 else:
-                    raise ValueError("Invalid colour name %s" %name)
+                    raise ValueError("Invalid colour name %s" % name)
 
                 alpha = 255
                 _r = int(hexadecimal[1:3], 16)
@@ -137,39 +137,39 @@ def parse_color(*args, color_mode='RGB', normed=False, **kwargs):
 
     elif len(args) == 2:
         gray, alpha = args
-        rgb =  gray, gray, gray
-    elif (len(args) == 3) and color_mode.startswith('RGB'):
+        rgb = gray, gray, gray
+    elif (len(args) == 3) and color_mode.startswith("RGB"):
         rgb = args
-    elif (len(args) == 3) and color_mode.startswith('HSB'):
+    elif (len(args) == 3) and color_mode.startswith("HSB"):
         hsb = args
-    elif (len(args) == 4) and color_mode.startswith('RGB'):
+    elif (len(args) == 4) and color_mode.startswith("RGB"):
         _r, _g, _b, alpha = args
         rgb = (_r, _g, _b)
-    elif (len(args) == 4) and color_mode.startswith('HSB'):
+    elif (len(args) == 4) and color_mode.startswith("HSB"):
         _h, _s, _b, alpha = args
         hsb = (_h, _s, _b)
-    elif 'gray' in kwargs:
-        gray = kwargs['gray']
+    elif "gray" in kwargs:
+        gray = kwargs["gray"]
         rgb = gray, gray, gray
-    elif all(param in kwargs for param in ['red', 'green', 'blue']):
-        _r = kwargs['red']
-        _g = kwargs['green']
-        _b = kwargs['blue']
+    elif all(param in kwargs for param in ["red", "green", "blue"]):
+        _r = kwargs["red"]
+        _g = kwargs["green"]
+        _b = kwargs["blue"]
         rgb = (_r, _g, _b)
-    elif all(param in kwargs for param in ['r', 'g', 'b']):
-        _r = kwargs['r']
-        _g = kwargs['g']
-        _b = kwargs['b']
+    elif all(param in kwargs for param in ["r", "g", "b"]):
+        _r = kwargs["r"]
+        _g = kwargs["g"]
+        _b = kwargs["b"]
         rgb = (_r, _g, _b)
-    elif all(param in kwargs for param in ['hue', 'saturation', 'brightness']):
-        _h = kwargs['hue']
-        _s = kwargs['saturation']
-        _b = kwargs['brightness']
+    elif all(param in kwargs for param in ["hue", "saturation", "brightness"]):
+        _h = kwargs["hue"]
+        _s = kwargs["saturation"]
+        _b = kwargs["brightness"]
         hsb = (_h, _s, _b)
-    elif all(param in kwargs for param in ['h', 's', 'b']):
-        _h = kwargs['h']
-        _s = kwargs['s']
-        _b = kwargs['b']
+    elif all(param in kwargs for param in ["h", "s", "b"]):
+        _h = kwargs["h"]
+        _s = kwargs["s"]
+        _b = kwargs["b"]
         hsb = (_h, _s, _b)
     else:
         raise ValueError("Failed to parse color.")
@@ -199,6 +199,7 @@ def parse_color(*args, color_mode='RGB', normed=False, **kwargs):
 
 class Color:
     """Represents a color."""
+
     def __init__(self, *args, color_mode=None, normed=False, **kwargs):
         if color_mode is None:
             color_mode = color_parse_mode
@@ -214,8 +215,9 @@ class Color:
             b = args[0]._blue
             a = args[1]
         else:
-            r, g, b, a = parse_color(*args, color_mode=color_mode,
-                                     normed=normed, **kwargs)
+            r, g, b, a = parse_color(
+                *args, color_mode=color_mode, normed=normed, **kwargs
+            )
 
         self._red = r
         self._green = g
@@ -254,7 +256,7 @@ class Color:
 
         """
         lerped = (lerp(s, t, amount) for s, t in zip(self.rgba, target.rgba))
-        return Color(*lerped, color_mode='RGB')
+        return Color(*lerped, color_mode="RGB")
 
     def __repr__(self):
         fvalues = self._red, self._green, self._blue
@@ -263,12 +265,14 @@ class Color:
     __str__ = __repr__
 
     def __eq__(self, other):
-        return all(math.isclose(sc, oc)
-                   for sc, oc in zip(self.normalized, other.normalized))
+        return all(
+            math.isclose(sc, oc) for sc, oc in zip(self.normalized, other.normalized)
+        )
 
     def __neq__(self, other):
-        return not all(math.isclose(sc, oc)
-                       for sc, oc in zip(self.normalized, other.normalized))
+        return not all(
+            math.isclose(sc, oc) for sc, oc in zip(self.normalized, other.normalized)
+        )
 
     @property
     def normalized(self):
@@ -306,7 +310,7 @@ class Color:
         #
         # - Conversion to grayscale, sample implementation (StackOverflow)
         # <https://stackoverflow.com/a/15686412>
-        norm_gray  = 0.299 * self._red + 0.587 * self._green + 0.144 * self._blue
+        norm_gray = 0.299 * self._red + 0.587 * self._green + 0.144 * self._blue
         return norm_gray * 255
 
     @gray.setter
@@ -341,7 +345,6 @@ class Color:
         :rtype: tuple
         """
         return (self.red, self.green, self.blue, self.alpha)
-
 
     @property
     def red(self):
@@ -432,18 +435,18 @@ class Color:
     @property
     def b(self):
         """The blue or the brightness value (depending on the color mode)."""
-        if color_parse_mode== 'RGB':
+        if color_parse_mode == "RGB":
             return self.blue
-        elif color_parse_mode== 'HSB':
+        elif color_parse_mode == "HSB":
             return self.brightness
         else:
             raise ValueError("Unknown color mode {}".format(color_parse_mode))
 
     @b.setter
     def b(self, value):
-        if color_parse_mode== 'RGB':
+        if color_parse_mode == "RGB":
             self.blue = value
-        elif color_parse_mode== 'HSB':
+        elif color_parse_mode == "HSB":
             self.brightness = value
         else:
             raise ValueError("Unknown color mode {}".format(color_parse_mode))

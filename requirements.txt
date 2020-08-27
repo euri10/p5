@@ -5,3 +5,11 @@ Pillow==7.1.2
 vispy==0.6.4
 PyOpenGL==3.1.5
 PyOpenGL-accelerate==3.1.5
+
+# Testing
+autoflake
+black
+flake8
+isort
+pytest
+mypy

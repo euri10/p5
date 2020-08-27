@@ -16,6 +16,5 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 import vispy
-vispy.use('glfw')
 
-from .userspace import *
+vispy.use("glfw")

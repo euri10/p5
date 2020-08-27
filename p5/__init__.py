@@ -15,15 +15,3 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
-from .sketch import *
-from .core import *
-from .pmath import *
-
-from .__version__ import __title__
-from .__version__ import __description__
-from .__version__ import __url__
-from .__version__ import __version__
-from .__version__ import __author__
-from .__version__ import __license__
-from .__version__ import __copyright__

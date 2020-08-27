@@ -24,16 +24,12 @@ from PIL import Image
 from vispy import app
 
 from ..core import p5
-
-from .events import KeyEvent
-from .events import MouseEvent
-from .events import handler_names
+from .events import KeyEvent, MouseEvent, handler_names
 
 
 def _dummy(*args, **kwargs):
-    """Eat all arguments, do nothing.
-    """
-    pass
+    """Eat all arguments, do nothing."""
+
 
 class Sketch(app.Canvas):
     """The main sketch instance.
@@ -55,13 +51,13 @@ class Sketch(app.Canvas):
     :type frame_rate: int
 
     """
-    def __init__(self, setup_method, draw_method,
-                 handlers=dict(), frame_rate=60):
+
+    def __init__(self, setup_method, draw_method, handlers=dict(), frame_rate=60):
         app.Canvas.__init__(
             self,
             title=builtins.title,
             size=(builtins.width, builtins.height),
-            keys='interactive',
+            keys="interactive",
             resizable=True,
         )
 
@@ -79,7 +75,7 @@ class Sketch(app.Canvas):
 
         self.handler_queue = []
 
-        self._save_fname = 'screen'
+        self._save_fname = "screen"
         self._save_fname_num = 0
         self._save_flag = False
 
@@ -122,9 +118,8 @@ class Sketch(app.Canvas):
         self.update()
 
     def _save_buffer(self):
-        """Save the renderer buffer to the given file.
-        """
-        img_data = p5.renderer.fbuffer.read(mode='color', alpha=False)
+        """Save the renderer buffer to the given file."""
+        img_data = p5.renderer.fbuffer.read(mode="color", alpha=False)
         img = Image.fromarray(img_data)
         img.save(self._save_fname)
         self._save_flag = False
@@ -135,11 +130,10 @@ class Sketch(app.Canvas):
         self._save_buffer()
 
     def queue_screenshot(self, filename):
-        """Save the current frame
-        """
-        fname_split = filename.split('.')
-        ext = '.' + fname_split[-1]
-        stem = '.'.join(fname_split[:-1])
+        """Save the current frame"""
+        fname_split = filename.split(".")
+        ext = "." + fname_split[-1]
+        stem = ".".join(fname_split[:-1])
         self._save_fname = stem + str(self._save_fname_num).zfill(4) + ext
         self._save_fname_num = self._save_fname_num + 1
         self._save_flag = True
@@ -164,36 +158,36 @@ class Sketch(app.Canvas):
 
     def on_key_press(self, event):
         kev = KeyEvent(event, active=True)
-        self._enqueue_event('key_pressed', kev)
+        self._enqueue_event("key_pressed", kev)
 
     def on_key_release(self, event):
         kev = KeyEvent(event)
-        self._enqueue_event('key_released', kev)
-        if not (event.text == ''):
-            self._enqueue_event('key_typed', kev)
+        self._enqueue_event("key_released", kev)
+        if not (event.text == ""):
+            self._enqueue_event("key_typed", kev)
 
     def on_mouse_press(self, event):
         mev = MouseEvent(event, active=True)
-        self._enqueue_event('mouse_pressed', mev)
+        self._enqueue_event("mouse_pressed", mev)
 
     def on_mouse_double_click(self, event):
         mev = MouseEvent(event)
-        self._enqueue_event('mouse_double_clicked', mev)
+        self._enqueue_event("mouse_double_clicked", mev)
 
     def on_mouse_release(self, event):
         mev = MouseEvent(event)
-        self._enqueue_event('mouse_released', mev)
-        self._enqueue_event('mouse_clicked', mev)
+        self._enqueue_event("mouse_released", mev)
+        self._enqueue_event("mouse_clicked", mev)
 
     def on_mouse_move(self, event):
         mev = MouseEvent(event, active=builtins.mouse_is_pressed)
-        self._enqueue_event('mouse_moved', mev)
+        self._enqueue_event("mouse_moved", mev)
         if builtins.mouse_is_pressed:
-            self._enqueue_event('mouse_dragged', mev)
+            self._enqueue_event("mouse_dragged", mev)
 
     def on_mouse_wheel(self, event):
         mev = MouseEvent(event, active=builtins.mouse_is_pressed)
-        self._enqueue_event('mouse_wheel', mev)
+        self._enqueue_event("mouse_wheel", mev)
 
     # def on_touch(self, event):
     #     self._enqueue_event('touch', event)
