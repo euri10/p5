@@ -27,11 +27,6 @@ from functools import wraps
 
 from vispy import app
 
-
-
-__all__ = ['no_loop', 'loop', 'redraw', 'size', 'title', 'no_cursor',
-           'cursor', 'exit', 'draw', 'setup', 'run', 'save_frame', 'save']
-
 from p5.core import p5
 from p5.pmath import matrix
 from p5.sketch.base import Sketch

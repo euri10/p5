@@ -1,6 +1,7 @@
 import importlib
 import time
 import cProfile
+
 import p5
 
 filenames = ['arcs', 'custom_shapes', 'triangle_strip', 'custom_shapes2', 'curves', 'primitives']
@@ -8,7 +9,6 @@ max_frames = 100
 e = SystemExit()
 
 for name in filenames:
-    p5 = importlib.import_module('p5')
     module = importlib.import_module(name)
     curr_frames = 0
 

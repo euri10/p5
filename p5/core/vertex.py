@@ -32,8 +32,7 @@ is_curve = False
 is_quadratic = False
 is_contour = False
 
-__all__ = ['begin_shape', 'end_shape', 'begin_contour', 'end_contour',
-           'curve_vertex', 'bezier_vertex', 'quadratic_vertex', 'vertex']
+
 
 
 def begin_shape(kind=TESS):

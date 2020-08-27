@@ -20,13 +20,6 @@ import random
 
 
 
-__all__ = [
-    # PERLIN NOISE FUNCTIONS
-    'noise', 'noise_detail', 'noise_seed',
-
-    # RANDOM NUMBER GENERATION
-    'random_uniform', 'random_gaussian', 'random_seed'
-]
 
 # Most of the perlin noise code is based on the original Processing
 # implementation of the noise function. toxi (+ other folks) put a

@@ -28,8 +28,7 @@ from PIL import ImageOps
 from vispy import gloo
 
 
-__all__ = ['PImage', 'image', 'load_image', 'image_mode',
-           'load_pixels']
+
 
 from p5.core import color, p5
 from p5.pmath.utils import _is_numeric, constrain

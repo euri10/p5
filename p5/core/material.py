@@ -1,6 +1,5 @@
 import numpy as np
 
-__all__ = ['normal_material', 'basic_material', 'blinn_phong_material', 'ambient', 'emissive', 'diffuse', 'shininess', 'specular']
 
 from p5.core import p5
 from p5.core.attribs import fill

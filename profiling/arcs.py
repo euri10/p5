@@ -1,6 +1,4 @@
-from p5.core.primitives import arc
-from p5.pmath.utils import QUARTER_PI, PI
-from p5.sketch.userspace import run, size
+from p5 import size, PI, arc, QUARTER_PI, run
 
 
 def setup():

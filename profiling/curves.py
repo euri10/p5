@@ -1,7 +1,5 @@
-from p5.core.attribs import no_fill, fill
-from p5.core.vertex import begin_shape, vertex, bezier_vertex, end_shape, curve_vertex, \
-    quadratic_vertex
-from p5.sketch.userspace import size, run
+from p5 import size, no_fill, begin_shape, vertex, bezier_vertex, end_shape, fill, \
+    curve_vertex, quadratic_vertex, run
 
 
 def setup():

@@ -22,9 +22,7 @@ import math
 import numpy as np
 
 
-__all__ = ['Arc', 'point', 'line', 'arc', 'triangle', 'quad',
-           'rect', 'square', 'circle', 'ellipse', 'ellipse_mode',
-           'rect_mode', 'bezier', 'curve', 'create_shape', 'draw_shape']
+
 
 from p5.core import p5
 from p5.core.constants import SType

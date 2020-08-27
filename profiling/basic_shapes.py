@@ -1,10 +1,8 @@
 # Adapted from https://p5.readthedocs.io/en/latest/examples/form/shape%20primitives.html
 import cProfile
 
-from p5.core.attribs import background, no_stroke, fill
-from p5.core.primitives import triangle, rect, quad, ellipse, arc
-from p5.pmath.utils import PI, TWO_PI
-from p5.sketch.userspace import size, run
+from p5 import size, background, no_stroke, fill, triangle, rect, quad, ellipse, arc, \
+    PI, TWO_PI, run
 
 FRAME_MAX = 10
 

@@ -22,17 +22,6 @@
 from functools import wraps
 
 
-__all__ = [
-    # BEZIER METHODS
-    'bezier_point', 'bezier_tangent', 'bezier_detail',
-
-    # CURVE METHODS
-    'curve_point', 'curve_tangent', 'curve_detail', 'curve_tightness',
-
-    # QUADRATIC METHODS
-    'quadratic_point'
-]
-
 from p5.pmath.vector import Point
 
 curve_resolution = 20

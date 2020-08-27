@@ -20,9 +20,6 @@ import colorsys
 import math
 
 
-
-__all__ = ['color_mode', 'Color']
-
 from p5.core.constants import colour_codes
 from p5.pmath.utils import constrain, lerp
 

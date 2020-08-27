@@ -24,10 +24,7 @@ from PIL import ImageFilter
 from PIL import ImageChops
 
 
-__all__ = ['create_font', 'load_font', 'text', 'text_font',
-    'text_align', 'text_leading', 'text_size', 'text_width',
-    'text_ascent', 'text_descent'
-    ]
+
 
 from p5.core import p5
 from p5.core.image import PImage, image
